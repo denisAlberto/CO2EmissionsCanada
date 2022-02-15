@@ -107,6 +107,11 @@ median_plot_beside <- function( data_a,
   
 }
 
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
 ####################################################
 #               ANALISE DESCRITIVA                 #
 ####################################################
@@ -269,4 +274,48 @@ median_plot_beside( data_a = dados$Fuel.Consumption.City..L.100.km.,
                     legend = c("cidade", "estrada"),
                     cex_n_size = 1,
                     las = 2)
+
+
+
+g_premium <- dados[grep("G. Premium", dados$Fuel.Type, ignore.case=T),]
+diesel <- dados[grep("diesel", dados$Fuel.Type, ignore.case=T),]
+ethanol <- dados[grep("Ethanol", dados$Fuel.Type, ignore.case=T),]
+g_normal <- dados[grep("G. Normal", dados$Fuel.Type, ignore.case=T),]
+gas_natural <- dados[grep("Gas Natural", dados$Fuel.Type, ignore.case=T),]
+
+plot( g_premium$Fuel.Consumption.City..L.100.km., g_premium$CO2.Emissions.g.km.,  col="red" )
+par(new=TRUE)
+plot( diesel$Fuel.Consumption.City..L.100.km., 
+      diesel$CO2.Emissions.g.km., 
+      pch = 21,
+      bg = "red",   
+      col = "blue", 
+      cex = 0.6,    
+      lwd = 2 )
+
+plot(g_premium$Fuel.Consumption.City..L.100.km. ~ g_premium$CO2.Emissions.g.km.)
+plot(diesel$Fuel.Consumption.City..L.100.km. ~ diesel$CO2.Emissions.g.km.)
+plot(ethanol$Fuel.Consumption.City..L.100.km. ~ ethanol$CO2.Emissions.g.km.)
+plot(g_normal$Fuel.Consumption.City..L.100.km. ~ g_normal$CO2.Emissions.g.km.)
+plot(gas_natural$Fuel.Consumption.City..L.100.km. ~ gas_natural$CO2.Emissions.g.km.)
+
+
+
+
+
+
+m_data_a <- tapply(dados$Fuel.Consumption.City..L.100.km., dados$Make , median)
+m_data_a_s <- sort(m_data_a, decreasing = FALSE)
+
+m_data_b <- tapply(dados$Fuel.Consumption.Hwy..L.100.km., dados$Make, median)
+m_data_b_s <- sort(m_data_b, decreasing = FALSE)
+
+df <- data.frame(cidade=m_data_a_s, rodovia=m_data_b_s)
+boxplot(df)
+
+par(mar=c(height,4,4,4))
+
+
+boxplot(dados$Fuel.Consumption.City..L.100.km.)
+
 

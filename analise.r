@@ -6,7 +6,6 @@ library(dplyr)
 ####################################################
 #               IMPORTANDO DADOS                   #
 ####################################################
-setwd("D:/Projetos/ciencia_de_dados_pos/fundamentos de estatistica/CO2EmissionByVehicle")
 dados <- read.csv('dataset/CO2 Emissions_Canada.csv')
 View(dados)
 glimpse(dados)
@@ -33,10 +32,10 @@ glimpse(dados)
 #               AJUSTE DO DATASET                  #
 ####################################################
 
-dados$Fuel.Type[dados$Fuel.Type == "D"] <- "Diesel"
 dados$Fuel.Type[dados$Fuel.Type == "Z"] <- "G. Premium"
+dados$Fuel.Type[dados$Fuel.Type == "X"] <- "G. Comum"
+dados$Fuel.Type[dados$Fuel.Type == "D"] <- "Diesel"
 dados$Fuel.Type[dados$Fuel.Type == "E"] <- "Ethanol"
-dados$Fuel.Type[dados$Fuel.Type == "X"] <- "G. Normal"
 dados$Fuel.Type[dados$Fuel.Type == "N"] <- "Gas Natural"
 
 ####################################################
@@ -116,8 +115,109 @@ getmode <- function(v) {
 #               ANALISE DESCRITIVA                 #
 ####################################################
 
+#######################################################
+#       Tabela de analise entre combustiveis          #
+#######################################################
+t <-table(dados$Fuel.Type)
+
+##Gasolina Comum
+grep <- dados[grep("G. Comum", dados$Fuel.Type, ignore.case=T),]
+s<-shapiro.test(grep$CO2.Emissions.g.km.[0:5000])
+analitic <- data.frame(comb = "G. Comum", 
+                       count=t['G. Comum'],
+                      sd = sd(grep$CO2.Emissions.g.km.), 
+                      var=var(grep$CO2.Emissions.g.km.),
+                      mean=mean(grep$CO2.Emissions.g.km.),
+                      median=mean(grep$CO2.Emissions.g.km.),
+                      moda=getmode(grep$CO2.Emissions.g.km.),
+                      min = quantile(grep$CO2.Emissions.g.km.)[1],
+                      quartil.1=quantile(grep$CO2.Emissions.g.km.)[2],
+                      quartil.2=quantile(grep$CO2.Emissions.g.km.)[3],
+                      quartil.3=quantile(grep$CO2.Emissions.g.km.)[4],
+                      max = quantile(grep$CO2.Emissions.g.km.)[5],
+                      amp = range(grep$CO2.Emissions.g.km.)[2]-range(grep$CO2.Emissions.g.km.)[1],
+                      coef.var = sd(grep$CO2.Emissions.g.km./mean(grep$CO2.Emissions.g.km.)),
+                      normal=s$p.value > 0.05)
+
+##Gasolina Premium
+grep <- dados[grep("G. Premium", dados$Fuel.Type, ignore.case=T),]
+s<-shapiro.test(grep$CO2.Emissions.g.km.[0:5000])
+analitic[nrow(analitic) + 1,] <- data.frame(comb = "G. Premium", 
+                                            count=t['G. Premium'],
+                                            sd = sd(grep$CO2.Emissions.g.km.), 
+                                            var=var(grep$CO2.Emissions.g.km.),
+                                            mean=mean(grep$CO2.Emissions.g.km.),
+                                            median=mean(grep$CO2.Emissions.g.km.),
+                                            moda=getmode(grep$CO2.Emissions.g.km.),
+                                            min = quantile(grep$CO2.Emissions.g.km.)[1],
+                                            quartil.1=quantile(grep$CO2.Emissions.g.km.)[2],
+                                            quartil.2=quantile(grep$CO2.Emissions.g.km.)[3],
+                                            quartil.3=quantile(grep$CO2.Emissions.g.km.)[4],
+                                            max=quantile(grep$CO2.Emissions.g.km.)[5],
+                                            amp=range(grep$CO2.Emissions.g.km.)[2]-range(grep$CO2.Emissions.g.km.)[1],
+                                            coef.var = sd(grep$CO2.Emissions.g.km./mean(grep$CO2.Emissions.g.km.)),
+                                            normal=s$p.value > 0.05)
+
+##Diesel
+grep <- dados[grep("Diesel", dados$Fuel.Type, ignore.case=T),]
+s<-shapiro.test(grep$CO2.Emissions.g.km.[0:5000])
+analitic[nrow(analitic) + 1,] <- data.frame(comb = "Diesel", 
+                                            count=t['Diesel'],
+                                            sd = sd(grep$CO2.Emissions.g.km.), 
+                                            var=var(grep$CO2.Emissions.g.km.),
+                                            mean=mean(grep$CO2.Emissions.g.km.),
+                                            median=mean(grep$CO2.Emissions.g.km.),
+                                            moda=getmode(grep$CO2.Emissions.g.km.),
+                                            min = quantile(grep$CO2.Emissions.g.km.)[1],
+                                            quartil.1=quantile(grep$CO2.Emissions.g.km.)[2],
+                                            quartil.2=quantile(grep$CO2.Emissions.g.km.)[3],
+                                            quartil.3=quantile(grep$CO2.Emissions.g.km.)[4],
+                                            max=quantile(grep$CO2.Emissions.g.km.)[5],
+                                            amp=range(grep$CO2.Emissions.g.km.)[2]-range(grep$CO2.Emissions.g.km.)[1],
+                                            coef.var = sd(grep$CO2.Emissions.g.km./mean(grep$CO2.Emissions.g.km.)),
+                                            normal=s$p.value > 0.05)
+
+##Ethanol
+grep <- dados[grep("Ethanol", dados$Fuel.Type, ignore.case=T),]
+s<-shapiro.test(grep$CO2.Emissions.g.km.[0:5000])
+analitic[nrow(analitic) + 1,] <- data.frame(comb = "Ethanol", 
+                                            count=t['Ethanol'],
+                                            sd = sd(grep$CO2.Emissions.g.km.), 
+                                            var=var(grep$CO2.Emissions.g.km.),
+                                            mean=mean(grep$CO2.Emissions.g.km.),
+                                            median=mean(grep$CO2.Emissions.g.km.),
+                                            moda=getmode(grep$CO2.Emissions.g.km.),
+                                            min = quantile(grep$CO2.Emissions.g.km.)[1],
+                                            quartil.1=quantile(grep$CO2.Emissions.g.km.)[2],
+                                            quartil.2=quantile(grep$CO2.Emissions.g.km.)[3],
+                                            quartil.3=quantile(grep$CO2.Emissions.g.km.)[4],
+                                            max=quantile(grep$CO2.Emissions.g.km.)[5],
+                                            amp=range(grep$CO2.Emissions.g.km.)[2]-range(grep$CO2.Emissions.g.km.)[1],
+                                            coef.var = sd(grep$CO2.Emissions.g.km./mean(grep$CO2.Emissions.g.km.)),
+                                            normal=s$p.value > 0.05)
+
+##Gas Natural
+grep <- dados[grep("Gas Natural", dados$Fuel.Type, ignore.case=T),]
+s<-shapiro.test(grep$CO2.Emissions.g.km.[0:5000])
+analitic[nrow(analitic) + 1,] <- data.frame(comb = "Gas Natural", 
+                                            count=t['Gas Natural'],
+                                            sd = sd(grep$CO2.Emissions.g.km.), 
+                                            var=var(grep$CO2.Emissions.g.km.),
+                                            mean=mean(grep$CO2.Emissions.g.km.),
+                                            median=mean(grep$CO2.Emissions.g.km.),
+                                            moda=getmode(grep$CO2.Emissions.g.km.),
+                                            min = quantile(grep$CO2.Emissions.g.km.)[1],
+                                            quartil.1=quantile(grep$CO2.Emissions.g.km.)[2],
+                                            quartil.2=quantile(grep$CO2.Emissions.g.km.)[3],
+                                            quartil.3=quantile(grep$CO2.Emissions.g.km.)[4],
+                                            max=quantile(grep$CO2.Emissions.g.km.)[5],
+                                            amp=range(grep$CO2.Emissions.g.km.)[2]-range(grep$CO2.Emissions.g.km.)[1],
+                                            coef.var = sd(grep$CO2.Emissions.g.km./mean(grep$CO2.Emissions.g.km.)),
+                                            normal=s$p.value > 0.05)
+View(analitic)
+
 ############################################################
-# O que tem menor média de consumo combinado na questão de:#
+#      média de consumo combinado na questão de:           #
 ############################################################
 ## Marca
 median_plot( data = dados$Fuel.Consumption.Comb..L.100.km., 
@@ -217,7 +317,6 @@ median_plot( data = dados$CO2.Emissions.g.km.,
 #         Comparativo de média de consumo entre           #
 #            cidade/rodovia na questão de:                #  
 ###########################################################
-
 ## Marca
 median_plot_beside( data_a = dados$Fuel.Consumption.City..L.100.km., 
                     data_b = dados$Fuel.Consumption.Hwy..L.100.km.,
@@ -275,10 +374,56 @@ median_plot_beside( data_a = dados$Fuel.Consumption.City..L.100.km.,
                     cex_n_size = 1,
                     las = 2)
 
+###########################################################
+#                  Regressão Linear                       #  
+###########################################################
+##Gasolina Comum Vs Emissão de CO2
+grep <- dados[grep("G. Normal", dados$Fuel.Type, ignore.case=T),]
+a <-lm(CO2.Emissions.g.km. ~ Fuel.Consumption.City..L.100.km., data = grep)
+plot( main = "Gasolina comum vs Emissão de CO2",
+      xlab = "Emissão de CO2 (g/km)",
+      ylab = "Gasolina comum (L/100km)",
+      grep$CO2.Emissions.g.km.,
+      grep$Fuel.Consumption.City..L.100.km.,
+      xlim = c(100, 600),
+      ylim = c(5,30),
+      col = "blue", cex = 0.6, lwd = 2 )
+
+##Gasolina Premium Vs Emissão de CO2
+grep <- dados[grep("G. Premium", dados$Fuel.Type, ignore.case=T),]
+plot( main = "Gasolina premium vs Emissão de CO2",
+      xlab = "Emissão de CO2 (g/km)",
+      ylab = "Gasolina premium (L/100km)",
+      grep$CO2.Emissions.g.km.,
+      grep$Fuel.Consumption.City..L.100.km., 
+      xlim = c(100, 600),
+      ylim = c(5,30),
+      col = "blue", cex = 0.6, lwd = 2 )
+
+## Diesel Vs Emissão de CO2
+grep <- dados[grep("diesel", dados$Fuel.Type, ignore.case=T),]
+plot( main = "Diesel vs Emissão de CO2",
+      xlab = "Emissão de CO2 (g/km)",
+      ylab = "Diesel (L/100km)",
+      grep$CO2.Emissions.g.km.,
+      grep$Fuel.Consumption.City..L.100.km., 
+      xlim = c(100, 600),
+      ylim = c(5,30),
+      col = "blue", cex = 0.6, lwd = 2 )
+
+## Ethanol Vs Emissão de CO2
+grep <- dados[grep("Ethanol", dados$Fuel.Type, ignore.case=T),]
+plot( main = "Ethanol vs Emissão de CO2",
+      xlab = "Emissão de CO2 (g/km)",
+      ylab = "Ethanol (L/100km)",
+      grep$CO2.Emissions.g.km.,
+      grep$Fuel.Consumption.City..L.100.km., 
+      xlim = c(100, 600),
+      ylim = c(5,30),
+      col = "blue", cex = 0.6, lwd = 2 )
 
 
-g_premium <- dados[grep("G. Premium", dados$Fuel.Type, ignore.case=T),]
-diesel <- dados[grep("diesel", dados$Fuel.Type, ignore.case=T),]
+
 ethanol <- dados[grep("Ethanol", dados$Fuel.Type, ignore.case=T),]
 g_normal <- dados[grep("G. Normal", dados$Fuel.Type, ignore.case=T),]
 gas_natural <- dados[grep("Gas Natural", dados$Fuel.Type, ignore.case=T),]
